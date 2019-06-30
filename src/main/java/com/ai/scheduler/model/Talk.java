@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Talk implements Comparable<Talk>, Cloneable {
+public class Talk implements Comparable<Talk> {
 
     private String description;
     private List<String> tags;
@@ -23,12 +23,4 @@ public class Talk implements Comparable<Talk>, Cloneable {
         return Utils.getDuration(o) - Utils.getDuration(this);
     }
 
-    @Override
-    public Object clone() {
-        try {
-            return (Talk) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return new Talk(description, tags, title, type);
-        }
-    }
 }

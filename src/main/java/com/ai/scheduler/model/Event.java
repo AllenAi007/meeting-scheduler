@@ -3,13 +3,15 @@ package com.ai.scheduler.model;
 import com.ai.scheduler.util.Utils;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
 @Getter
-public class Event implements Comparable<Event>, Cloneable {
+@NoArgsConstructor
+public class Event implements Comparable<Event> {
 
     private LocalDate eventDate;
     private LocalTime startTime;
@@ -31,12 +33,4 @@ public class Event implements Comparable<Event>, Cloneable {
         return this.startTime.compareTo(event.startTime);
     }
 
-    @Override
-    public Object clone() {
-        try {
-            return (Event) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return new Event(eventDate, startTime, talk);
-        }
-    }
 }

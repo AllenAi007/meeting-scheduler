@@ -16,17 +16,4 @@ public interface MeetingScheduler {
      */
     List<DayEvent> schedule(Talks talks);
 
-    /**
-     * In case talk is too long that can't put into slots
-     *
-     * @return true means there are talks which are not able to be scheduled
-     */
-    boolean hasUnScheduledTalks();
-
-    /**
-     * Get unscheduled talks if there is any.
-     *
-     * @return List<Talk>
-     */
-    List<Talk> getUnScheduledTalks();
 }

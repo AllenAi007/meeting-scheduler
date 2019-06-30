@@ -4,6 +4,7 @@ import com.ai.scheduler.model.DayEvent;
 import com.ai.scheduler.model.Talk;
 import com.ai.scheduler.model.Talks;
 import com.ai.scheduler.util.Utils;
+import lombok.Getter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
 
+    @Getter
     private final List<DayEvent> dayEvents;
 
     public MeetingSchedulerTemplate(List<DayEvent> dayEvents) {
@@ -35,7 +37,7 @@ public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
         scheduleFixedTimeTalks(this.dayEvents, fixedTimeTalks);
 
         talks.getTalks().removeAll(fixedTimeTalks);
-        scheduleFlexibleTalks(this.dayEvents, talks);
+        scheduleFlexibleTalks(this.dayEvents, talks.getTalks());
 
         return this.dayEvents;
 
@@ -47,7 +49,7 @@ public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
      * @param dayEvents
      * @param flexibleTalks
      */
-    protected abstract void scheduleFlexibleTalks(List<DayEvent> dayEvents, Talks flexibleTalks);
+    protected abstract void scheduleFlexibleTalks(List<DayEvent> dayEvents, LinkedList<Talk> flexibleTalks);
 
     /**
      * Schedule fixed talk talks for given dayEvents

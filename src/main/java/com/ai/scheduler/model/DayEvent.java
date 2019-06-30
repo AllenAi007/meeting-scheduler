@@ -2,6 +2,7 @@ package com.ai.scheduler.model;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,7 +11,8 @@ import java.util.LinkedList;
 
 @Data
 @Getter
-public class DayEvent implements Cloneable {
+@NoArgsConstructor
+public class DayEvent {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
@@ -26,18 +28,10 @@ public class DayEvent implements Cloneable {
         this.events.add(event);
     }
 
-    @Override
-    public Object clone() {
-        try {
-            return (DayEvent) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return new DayEvent(date, startTime, endTime);
-        }
-    }
-
 
     @Data
     @Getter
+    @NoArgsConstructor
     public static class AvailableSlot implements Comparable<AvailableSlot> {
         private DayEvent dayEvent;
         private LocalTime startTime;
@@ -55,5 +49,6 @@ public class DayEvent implements Cloneable {
         public int compareTo(AvailableSlot o) {
             return duration - o.duration;
         }
+
     }
 }

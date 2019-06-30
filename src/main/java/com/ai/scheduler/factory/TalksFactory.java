@@ -2,7 +2,7 @@ package com.ai.scheduler.factory;
 
 import com.ai.scheduler.exception.InitializationException;
 import com.ai.scheduler.model.Talks;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ai.scheduler.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,7 +17,6 @@ import java.io.InputStream;
 public final class TalksFactory {
 
     private static final String INPUT_FILE_NAME = "talks.json";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private TalksFactory() {
     }
@@ -31,7 +30,7 @@ public final class TalksFactory {
     public static Talks createTalks() {
         log.info("Loading talks from classpath {}", INPUT_FILE_NAME);
         try (InputStream in = TalksFactory.class.getClassLoader().getResourceAsStream(INPUT_FILE_NAME)) {
-            return OBJECT_MAPPER.readValue(in, Talks.class);
+            return Utils.OBJECT_MAPPER.readValue(in, Talks.class);
         } catch (IOException e) {
             throw new InitializationException("Error caused while initialization with classpath input file " + INPUT_FILE_NAME, e);
         }
@@ -47,7 +46,7 @@ public final class TalksFactory {
     public static Talks createTalks(String absolutePath) {
         log.info("Loading talks file from absolute path {}", absolutePath);
         try (InputStream in = new FileInputStream(new File(absolutePath))) {
-            return OBJECT_MAPPER.readValue(in, Talks.class);
+            return Utils.OBJECT_MAPPER.readValue(in, Talks.class);
         } catch (IOException e) {
             throw new InitializationException("Error caused while initialization with absolute path input file" + INPUT_FILE_NAME, e);
         }

@@ -1,9 +1,14 @@
 package com.ai.scheduler.util;
 
+import com.ai.scheduler.exception.CloneFailedException;
 import com.ai.scheduler.exception.UnknownTalkTypeException;
 import com.ai.scheduler.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -12,9 +17,13 @@ import java.util.List;
 /**
  * Utilities class
  */
+@Slf4j
 public final class Utils {
 
-    private static int longestAvailableSlot = -1;
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
+            .registerModule(new Jdk8Module())
+            .registerModule(new JavaTimeModule());
+
 
     /**
      * Avoid initialization
@@ -125,9 +134,10 @@ public final class Utils {
     /**
      * Get day event string from dayEventList
      *
-     * @param dayEvent
+     * @param dayEvent given dayEvent
      */
     public static String getDayEventString(DayEvent dayEvent) {
+        Collections.sort(dayEvent.getEvents());
         StringBuilder stringBuilder = new StringBuilder();
         dayEvent.getEvents().forEach(event -> {
             stringBuilder.append(event.getStartTime());
@@ -158,13 +168,29 @@ public final class Utils {
         return stringBuilder.toString();
     }
 
-    public static int getLongestAvailableSlot(List<DayEvent> dayEventList) {
-        if (longestAvailableSlot != -1) {
-            return longestAvailableSlot;
+    /**
+     * Deep copy
+     *
+     * @param dayEvents given dayEvents
+     * @return
+     */
+    public static List<DayEvent> deepCopy(List<DayEvent> dayEvents) {
+        List<DayEvent> result = new LinkedList<>();
+        try {
+            for (DayEvent dayEvent : dayEvents) {
+                result.add(OBJECT_MAPPER.readValue(OBJECT_MAPPER.writeValueAsBytes(dayEvent), DayEvent.class));
+            }
+        } catch (IOException e) {
+            throw new CloneFailedException("Failed while deep copy dayEvents " + dayEvents, e);
         }
-        LinkedList<DayEvent.AvailableSlot> availableSlots = getAvailableSlots(dayEventList);
-        Collections.sort(availableSlots);
-        longestAvailableSlot = availableSlots.peekLast().getDuration();
-        return longestAvailableSlot;
+        return result;
     }
+
+    public static boolean isFixedTalk(Talk talk) {
+        return TalkType.KEYNOTE.equals(talk.getType())
+                || TalkType.CLOSING.equals(talk.getType())
+                || TalkType.LUNCH.equals(talk.getType())
+                || TalkType.TEA.equals(talk.getType());
+    }
+
 }

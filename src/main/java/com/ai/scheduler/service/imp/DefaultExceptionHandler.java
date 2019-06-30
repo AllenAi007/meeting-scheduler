@@ -1,7 +1,6 @@
 package com.ai.scheduler.service.imp;
 
-import com.ai.scheduler.exception.InitializationException;
-import com.ai.scheduler.exception.MeetingScheduleException;
+import com.ai.scheduler.exception.GenericException;
 import com.ai.scheduler.service.ExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,10 +12,10 @@ public class DefaultExceptionHandler implements ExceptionHandler {
 
     @Override
     public final void handle(Throwable exception) {
-        if (exception instanceof MeetingScheduleException) {
-            handleBusinessException((MeetingScheduleException) exception);
+        if (exception instanceof GenericException) {
+            handleGenericException((GenericException) exception);
         } else {
-            handleTechnicalException(exception);
+            handleUnknownException(exception);
         }
     }
 
@@ -25,8 +24,8 @@ public class DefaultExceptionHandler implements ExceptionHandler {
      *
      * @param exception
      */
-    protected void handleTechnicalException(Throwable exception) {
-        log.error("Technical exception caused", exception);
+    protected void handleUnknownException(Throwable exception) {
+        log.error("Unknown exception caused", exception);
     }
 
     /**
@@ -34,7 +33,7 @@ public class DefaultExceptionHandler implements ExceptionHandler {
      *
      * @param exception
      */
-    protected void handleBusinessException(MeetingScheduleException exception) {
-        log.error("Business exception caused", exception);
+    protected void handleGenericException(GenericException exception) {
+        log.error("Generic exception caused", exception);
     }
 }

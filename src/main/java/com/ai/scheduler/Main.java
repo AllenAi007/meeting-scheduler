@@ -13,7 +13,6 @@ import com.ai.scheduler.util.Utils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -46,8 +45,8 @@ public class Main {
             return doRun(args);
         } catch (Throwable e) {
             this.exceptionHandler.handle(e);
+            throw e;
         }
-        return null;
     }
 
     protected List<DayEvent> doRun(String[] args) {

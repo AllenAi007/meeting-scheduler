@@ -3,17 +3,17 @@ package com.ai.scheduler.service.imp;
 import com.ai.scheduler.model.DayEvent;
 import com.ai.scheduler.model.Event;
 import com.ai.scheduler.model.Talk;
-import com.ai.scheduler.model.Talks;
+import com.ai.scheduler.model.TalkType;
 import com.ai.scheduler.service.MeetingSchedulerTemplate;
 import com.ai.scheduler.util.Utils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Default meeting scheduler
@@ -22,14 +22,10 @@ import java.util.List;
 @Getter
 public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
 
-    private final List<Talk> unScheduledTalks;
-
     private final List<DayEvent> dayEventsWithFixedTalks;
-
 
     public DefaultMeetingScheduler(List<DayEvent> dayEvents) {
         super(dayEvents);
-        unScheduledTalks = new LinkedList<>();
         dayEventsWithFixedTalks = new LinkedList<>();
     }
 
@@ -44,39 +40,62 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
      *
      * @param talks
      */
-    protected void scheduleFlexibleTalks(List<DayEvent> dayEvents, Talks talks) {
-        // clone a clean dayEvents with fixed talks booked
-        List<DayEvent> cloneDayEvents = (List<DayEvent>) ((LinkedList<DayEvent>) dayEvents).clone();
+    protected void scheduleFlexibleTalks(List<DayEvent> dayEvents, LinkedList<Talk> talks) {
+        if (talks.size() == 0) {
+            // break the recursive
+            return;
+        }
 
-        LinkedList<Talk> unFixedTalks = talks.getTalks();
-        //desc
-        Collections.sort(unFixedTalks);
+        // clone dayEvents for scheduling
+        List<DayEvent> cloneDayEvents = Utils.deepCopy(dayEvents);
+        // clone a clean dayEvent for recursive call
+        List<DayEvent> cleanDayEvent = Utils.deepCopy(dayEvents);
+        LinkedList<Talk> notYetScheduledTalks = new LinkedList<>();
+        LinkedList<Event> bookedEvents = new LinkedList<>();
+
+        // desc
+        Collections.sort(talks);
         // loop ends either talks are all booked or availableSlots are all used
-        while (unFixedTalks.size() > 0) {
-            LinkedList<DayEvent.AvailableSlot> availableSlots = Utils.getAvailableSlots(dayEvents);
+        while (talks.size() > 0) {
+            LinkedList<DayEvent.AvailableSlot> availableSlots = Utils.getAvailableSlots(cloneDayEvents);
             if (availableSlots == null || availableSlots.size() == 0) {
                 break;
             }
             // asc
             Collections.sort(availableSlots);
-            Talk talk = unFixedTalks.pollFirst();
-            int longestAvailableSlot = Utils.getLongestAvailableSlot(cloneDayEvents);
-            log.info("longestAvailableSlot is {}", longestAvailableSlot);
-            if (Utils.getDuration(talk) > longestAvailableSlot) {
-                log.warn("Talk {} duration is longer than longest available slot {}", talk, longestAvailableSlot);
-                this.unScheduledTalks.add(talk);
-                continue;
-            }
+            Talk talk = talks.pollFirst();
+            boolean findSlot = false;
             for (DayEvent.AvailableSlot availableSlot : availableSlots) {
                 if (availableSlot.getDuration() >= Utils.getDuration(talk)) {
                     availableSlot.getDayEvent()
                             .add(new Event(availableSlot.getDayEvent().getDate(),
                                     availableSlot.getStartTime(), talk));
+                    findSlot = true;
                     break;
                 }
             }
+            // not find a slot yet
+            if (!findSlot) {
+                notYetScheduledTalks.add(talk);
+            }
+        }
+
+        // copy clone into real
+        copyCloneToReal(cloneDayEvents);
+        scheduleFlexibleTalks(cleanDayEvent, notYetScheduledTalks);
+    }
+
+    private void copyCloneToReal(List<DayEvent> cloneDayEvents) {
+        for (int i = 0; i < cloneDayEvents.size(); i++) {
+            DayEvent dayEvent = cloneDayEvents.get(i);
+            getDayEvents().get(i).getEvents().addAll(
+                    dayEvent.getEvents().stream()
+                            .filter(e -> !Utils.isFixedTalk(e.getTalk()))
+                            .collect(Collectors.toList())
+            );
         }
     }
+
 
     /**
      * Schedule for fixed time talks, greedy algorithm.
@@ -99,13 +118,5 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
         dayEventsWithFixedTalks.addAll(dayEvents);
     }
 
-    @Override
-    public boolean hasUnScheduledTalks() {
-        return getUnScheduledTalks().size() > 0;
-    }
 
-    @Override
-    public List<Talk> getUnScheduledTalks() {
-        return null;
-    }
 }

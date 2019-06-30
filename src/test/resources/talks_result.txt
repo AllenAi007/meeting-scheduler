@@ -22,6 +22,7 @@ Day 2 Track 2:
 11:30	Does consensus really need to be distributed?	REGULAR_TALK
 12:00	B/G Deploy to a live site. In 10 minutes!	LIGHTNING
 12:10	Become an instant command-line Ninja!	LIGHTNING
+12:20	Downloading something is simple,right? Right?	LIGHTNING
 12:30	LUNCH
 13:30	Which category does this belong to?	WORKSHOP
 14:30	Confused about Mappers, reducers, & HDFS?	REGULAR_TALK
@@ -30,4 +31,3 @@ Day 2 Track 2:
 16:15	How to make containers work for you	REGULAR_TALK
 16:45	Do it once, do it right	LIGHTNING
 17:00	We can help your enterprise!	CLOSING
-12:20	Downloading something is simple,right? Right?	LIGHTNING
