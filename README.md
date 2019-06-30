@@ -11,5 +11,5 @@
 `mvn exec:java -Dexec.args="/Users/aihua/Downloads/talks.json"`
 
 ## Run test, test coverage report coverage 89%
-- Run mvn clean test as below and then open target/site/jacoco/index.html in browser
+- Run mvn clean test as below and then open target/site/jacoco/index.html in browser  
 `mvn clean test`
