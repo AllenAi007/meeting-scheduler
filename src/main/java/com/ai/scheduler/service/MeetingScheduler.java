@@ -11,7 +11,7 @@ public interface MeetingScheduler {
     /**
      * Schedule meeting by given talks.
      *
-     * @param talks
+     * @param talks given talks
      * @return List<DayEvent> result
      */
     List<DayEvent> schedule(Talks talks);
