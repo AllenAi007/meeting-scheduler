@@ -1,26 +1,36 @@
-package com.ai.scheduler.service;
+package com.ai.scheduler.service.imp;
 
 import com.ai.scheduler.model.DayEvent;
 import com.ai.scheduler.model.Event;
 import com.ai.scheduler.model.Talk;
 import com.ai.scheduler.model.Talks;
+import com.ai.scheduler.service.MeetingSchedulerTemplate;
 import com.ai.scheduler.util.Utils;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Simple meeting scheduler
+ * Default meeting scheduler
  */
+@Slf4j
 @Getter
-public class SimpleMeetingScheduler extends MeetingSchedulerTemplate {
+public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
+
+    private final List<Talk> unScheduledTalks;
+
+    private final List<DayEvent> dayEventsWithFixedTalks;
 
 
-    public SimpleMeetingScheduler(List<DayEvent> dayEvents) {
+    public DefaultMeetingScheduler(List<DayEvent> dayEvents) {
         super(dayEvents);
+        unScheduledTalks = new LinkedList<>();
+        dayEventsWithFixedTalks = new LinkedList<>();
     }
 
     /**
@@ -35,7 +45,11 @@ public class SimpleMeetingScheduler extends MeetingSchedulerTemplate {
      * @param talks
      */
     protected void scheduleFlexibleTalks(List<DayEvent> dayEvents, Talks talks) {
+        // clone a clean dayEvents with fixed talks booked
+        List<DayEvent> cloneDayEvents = (List<DayEvent>) ((LinkedList<DayEvent>) dayEvents).clone();
+
         LinkedList<Talk> unFixedTalks = talks.getTalks();
+        //desc
         Collections.sort(unFixedTalks);
         // loop ends either talks are all booked or availableSlots are all used
         while (unFixedTalks.size() > 0) {
@@ -43,8 +57,16 @@ public class SimpleMeetingScheduler extends MeetingSchedulerTemplate {
             if (availableSlots == null || availableSlots.size() == 0) {
                 break;
             }
+            // asc
             Collections.sort(availableSlots);
             Talk talk = unFixedTalks.pollFirst();
+            int longestAvailableSlot = Utils.getLongestAvailableSlot(cloneDayEvents);
+            log.info("longestAvailableSlot is {}", longestAvailableSlot);
+            if (Utils.getDuration(talk) > longestAvailableSlot) {
+                log.warn("Talk {} duration is longer than longest available slot {}", talk, longestAvailableSlot);
+                this.unScheduledTalks.add(talk);
+                continue;
+            }
             for (DayEvent.AvailableSlot availableSlot : availableSlots) {
                 if (availableSlot.getDuration() >= Utils.getDuration(talk)) {
                     availableSlot.getDayEvent()
@@ -73,6 +95,17 @@ public class SimpleMeetingScheduler extends MeetingSchedulerTemplate {
                 }
             }
         }
+        // keep a copy
+        dayEventsWithFixedTalks.addAll(dayEvents);
+    }
 
+    @Override
+    public boolean hasUnScheduledTalks() {
+        return getUnScheduledTalks().size() > 0;
+    }
+
+    @Override
+    public List<Talk> getUnScheduledTalks() {
+        return null;
     }
 }

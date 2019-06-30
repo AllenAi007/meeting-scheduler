@@ -6,14 +6,15 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.TreeSet;
+import java.util.LinkedList;
 
+@Data
 @Getter
-public class DayEvent {
-    private final LocalDate date;
-    private final LocalTime startTime;
-    private final LocalTime endTime;
-    private final TreeSet<Event> events = new TreeSet();
+public class DayEvent implements Cloneable {
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LinkedList<Event> events = new LinkedList<>();
 
     public DayEvent(LocalDate date, LocalTime startTime, LocalTime endTime) {
         this.date = date;
@@ -23,6 +24,15 @@ public class DayEvent {
 
     public void add(Event event) {
         this.events.add(event);
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return (DayEvent) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new DayEvent(date, startTime, endTime);
+        }
     }
 
 

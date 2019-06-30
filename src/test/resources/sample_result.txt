@@ -1,0 +1,33 @@
+Day 1 Track 1:
+09:00	Build the greatest CD pipelines with our tool!	KEYNOTE
+09:30	Simple things that you can do in the cloud	WORKSHOP
+10:30	Write in One DataCenter. Read from another. Simple, right?	WORKSHOP
+11:30	Or how to build a wall	REGULAR_TALK
+12:00	Tools and techniques to write secure code	REGULAR_TALK
+12:30	LUNCH
+13:30	Should I be worried about processor bugs?	WORKSHOP
+14:30	How cloud is becoming common in the enterprise	REGULAR_TALK
+15:00	TEA
+15:15	CD your way to greatness	WORKSHOP
+16:15	What you need to do to keep your enterprise Safe	REGULAR_TALK
+16:45	Simple blockchain introduction in 10 minutes	LIGHTNING
+17:00	Hear from our customers on how we helped them!	CLOSING
+
+Day 2 Track 2:
+09:00	Help us help you Save time. And money!	KEYNOTE
+09:30	Why is cloudflare so awesome?	REGULAR_TALK
+10:00	How to prioritize good quality, clean code in the era of instant gratification	REGULAR_TALK
+10:30	New age UX in the Cloudy age	REGULAR_TALK
+11:00	Why are containers needed?	REGULAR_TALK
+11:30	Does consensus really need to be distributed?	REGULAR_TALK
+12:00	B/G Deploy to a live site. In 10 minutes!	LIGHTNING
+12:10	Become an instant command-line Ninja!	LIGHTNING
+12:30	LUNCH
+13:30	Which category does this belong to?	WORKSHOP
+14:30	Confused about Mappers, reducers, & HDFS?	REGULAR_TALK
+15:00	TEA
+15:15	Internet of Stupid things	WORKSHOP
+16:15	How to make containers work for you	REGULAR_TALK
+16:45	Do it once, do it right	LIGHTNING
+17:00	We can help your enterprise!	CLOSING
+12:20	Downloading something is simple,right? Right?	LIGHTNING

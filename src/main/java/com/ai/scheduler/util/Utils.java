@@ -2,8 +2,10 @@ package com.ai.scheduler.util;
 
 import com.ai.scheduler.exception.UnknownTalkTypeException;
 import com.ai.scheduler.model.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,10 +14,13 @@ import java.util.List;
  */
 public final class Utils {
 
+    private static int longestAvailableSlot = -1;
+
     /**
      * Avoid initialization
      */
-    private Utils(){}
+    private Utils() {
+    }
 
     /**
      * Get AvailableSlot from given dayEvent
@@ -48,6 +53,7 @@ public final class Utils {
      * @return
      */
     public static LinkedList<DayEvent.AvailableSlot> getAvailableSlots(List<DayEvent> dayEvents) {
+        dayEvents.forEach(dayEvent -> Collections.sort(dayEvent.getEvents()));
         return dayEvents.stream()
                 .map(Utils::getAvailableSlots)
                 .reduce((a, b) -> {
@@ -150,5 +156,15 @@ public final class Utils {
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public static int getLongestAvailableSlot(List<DayEvent> dayEventList) {
+        if (longestAvailableSlot != -1) {
+            return longestAvailableSlot;
+        }
+        LinkedList<DayEvent.AvailableSlot> availableSlots = getAvailableSlots(dayEventList);
+        Collections.sort(availableSlots);
+        longestAvailableSlot = availableSlots.peekLast().getDuration();
+        return longestAvailableSlot;
     }
 }

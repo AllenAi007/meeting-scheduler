@@ -15,7 +15,8 @@ public final class EventFactory {
     private static final LocalTime LUNCH_START_TIME = LocalTime.of(12, 30);
     private static final LocalTime TEA_START_TIME = LocalTime.of(15, 00);
 
-    private EventFactory(){}
+    private EventFactory() {
+    }
 
     public static Event createLunchEvent(LocalDate eventDate) {
         Talk talk = new Talk();
