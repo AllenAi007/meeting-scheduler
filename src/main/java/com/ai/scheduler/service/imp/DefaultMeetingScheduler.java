@@ -22,26 +22,24 @@ import java.util.stream.Collectors;
 @Getter
 public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
 
-    private final List<DayEvent> dayEventsWithFixedTalks;
-
     public DefaultMeetingScheduler(List<DayEvent> dayEvents) {
         super(dayEvents);
-        dayEventsWithFixedTalks = new LinkedList<>();
     }
 
     /**
-     * Schedule for unfixed talk, greedy algorithm.
-     * <p>
+     * 1. Schedule for flexible talk, greedy algorithm.
      * Put the longest talk into smallest available slot,
-     * <p>
      * if smallest slot is short than the given talk, then go to second smallest
-     * <p>
      * until there is a slot is larger or equals than the given
      *
+     * 2. After one round fill, if there are still talks which are not scheduled, call #1 with a clone dayEvents(with only fixed talks)
+     *  and not yet scheduled talks. And keep doing util yet scheduled talks is empty
+     *
+     * @param dayEvents
      * @param talks
      */
     protected void scheduleFlexibleTalks(List<DayEvent> dayEvents, LinkedList<Talk> talks) {
-        if (talks.size() == 0) {
+        if (talks.isEmpty()) {
             // break the recursive
             return;
         }
@@ -51,7 +49,6 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
         // clone a clean dayEvent for recursive call
         List<DayEvent> cleanDayEvent = Utils.deepCopy(dayEvents);
         LinkedList<Talk> notYetScheduledTalks = new LinkedList<>();
-        LinkedList<Event> bookedEvents = new LinkedList<>();
 
         // desc
         Collections.sort(talks);
@@ -114,8 +111,6 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
                 }
             }
         }
-        // keep a copy
-        dayEventsWithFixedTalks.addAll(dayEvents);
     }
 
 
