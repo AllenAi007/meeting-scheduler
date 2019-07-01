@@ -3,7 +3,6 @@ package com.ai.scheduler.service.imp;
 import com.ai.scheduler.model.DayEvent;
 import com.ai.scheduler.model.Event;
 import com.ai.scheduler.model.Talk;
-import com.ai.scheduler.model.TalkType;
 import com.ai.scheduler.service.MeetingSchedulerTemplate;
 import com.ai.scheduler.util.Utils;
 import lombok.Getter;
