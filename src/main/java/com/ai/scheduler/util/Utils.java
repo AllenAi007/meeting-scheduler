@@ -116,7 +116,7 @@ public final class Utils {
             case KEYNOTE:
                 return LocalTime.of(9, 0);
             default:
-                return null;
+                throw new UnknownTalkTypeException("Unknown talk type ->" + talk.getType());
         }
     }
 

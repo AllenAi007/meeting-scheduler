@@ -43,8 +43,25 @@ public class MainTests {
     }
 
     @Test
-    public void given_more_talks_return_event_scheduled_day_events() {
+    public void given_more_talks_return_day_events_with_all_talks_scheduled() {
         String moreTalksFile = "more_talks.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
+        List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
+        int totalEventBooked = result.stream()
+                .map(DayEvent::getEvents)
+                .reduce((a, b) -> {
+                    a.addAll(b);
+                    return a;
+                })
+                .get()
+                .size() - 2 * result.size(); // minutes lUNCH and TEA
+        int totalTalks = TalksFactory.createTalks(absolutePath).getTalks().size();
+        Assert.assertEquals(totalEventBooked, totalTalks);
+    }
+
+    @Test
+    public void given_more_talks_with_more_fixed_event_return_day_events_with_all_talks_scheduled() {
+        String moreTalksFile = "more_fixed_talks.json";
         String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
         List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
         int totalEventBooked = result.stream()

@@ -31,9 +31,9 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
      * Put the longest talk into smallest available slot,
      * if smallest slot is short than the given talk, then go to second smallest
      * until there is a slot is larger or equals than the given
-     *
+     * <p>
      * 2. After one round fill, if there are still talks which are not scheduled, call #1 with a clone dayEvents(with only fixed talks)
-     *  and not yet scheduled talks. And keep doing util yet scheduled talks is empty
+     * and not yet scheduled talks. And keep doing util yet scheduled talks is empty
      *
      * @param dayEvents
      * @param talks
@@ -95,20 +95,35 @@ public class DefaultMeetingScheduler extends MeetingSchedulerTemplate {
 
 
     /**
-     * Schedule for fixed time talks, greedy algorithm.
+     * Schedule for fixed time talks, round robin algorithm
      */
     protected void scheduleFixedTimeTalks(List<DayEvent> dayEvents, LinkedList<Talk> fixedTimeTalks) {
-        int bookedTalks = 0;
-        while (fixedTimeTalks.size() > bookedTalks) {
-            for (Talk talk : fixedTimeTalks) {
-                LocalTime startTime = Utils.getFixedTalkStartTime(talk);
-                for (DayEvent dayEvent : dayEvents) {
-                    if (!Utils.isBooked(startTime, dayEvent)) {
-                        dayEvent.add(new Event(dayEvent.getDate(), startTime, talk));
-                        bookedTalks++;
-                        break;
-                    }
+
+        LinkedList<Talk> notYetBookedTalks = new LinkedList<>();
+        // first round, find available slot and booked directly
+        for (Talk talk : fixedTimeTalks) {
+            LocalTime startTime = Utils.getFixedTalkStartTime(talk);
+            boolean booked = false;
+            for (DayEvent dayEvent : dayEvents) {
+                if (!Utils.isBooked(startTime, dayEvent)) {
+                    dayEvent.add(new Event(dayEvent.getDate(), startTime, talk));
+                    booked = true;
+                    break;
                 }
+            }
+            if (!booked) {
+                notYetBookedTalks.add(talk);
+            }
+        }
+
+        // since not available slot left, round robin
+        if (!notYetBookedTalks.isEmpty()) {
+            for (int i = 0; i < notYetBookedTalks.size(); i++) {
+                int robin = i % dayEvents.size();
+                DayEvent toBeScheduleDayEvent = dayEvents.get(robin);
+                Talk talk = notYetBookedTalks.get(i);
+                LocalTime startTime = Utils.getFixedTalkStartTime(talk);
+                toBeScheduleDayEvent.add(new Event(toBeScheduleDayEvent.getDate(), startTime, talk));
             }
         }
     }
