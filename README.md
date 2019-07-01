@@ -5,7 +5,7 @@
 - Maven 3.0 +
 
 ## How to Run
-- Run without default talks.json from classpath:  
+- Run without parameter, will use default talks.json from classpath:  
 `mvn exec:java`
 - Run with parameter to parse external talk files /absolutePath/talks.json:  
 `mvn exec:java -Dexec.args="/Users/aihua/Downloads/talks.json"`
