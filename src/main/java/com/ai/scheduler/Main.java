@@ -61,6 +61,9 @@ public class Main {
             talks = TalksFactory.createTalks();
         }
         List<DayEvent> result = meetingScheduler.schedule(talks);
+        if (result == null || result.isEmpty()) {
+            return null;
+        }
         // print result
         log.info("");
         log.info(Utils.getDayEventString(result));

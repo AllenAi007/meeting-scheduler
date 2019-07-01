@@ -155,7 +155,7 @@ public final class Utils {
     /**
      * Get day event string from dayEventList
      *
-     * @param dayEventList
+     * @param dayEventList given day event list
      */
     public static String getDayEventString(List<DayEvent> dayEventList) {
         StringBuilder stringBuilder = new StringBuilder();

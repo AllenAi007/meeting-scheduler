@@ -1,0 +1,13 @@
+{
+  "talks": [
+    {
+      "type": "KEYNOTE",
+      "description": "Help us help you Save time. And money!",
+      "tags": [
+        "enterprise",
+        "keynote"
+      ],
+      "title": "Chatbot assistant to assist your helpdesk"
+    }
+  ]
+}

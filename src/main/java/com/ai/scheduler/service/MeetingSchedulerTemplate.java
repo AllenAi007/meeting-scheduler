@@ -32,6 +32,10 @@ public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
      */
     @Override
     public final List<DayEvent> schedule(Talks talks) {
+        // empty or null talks
+        if (talks == null || talks.getTalks() == null || talks.getTalks().isEmpty()) {
+            return null;
+        }
 
         LinkedList<Talk> fixedTimeTalks = Utils.getFixedTimeMeeting(talks);
         scheduleFixedTimeTalks(this.dayEvents, fixedTimeTalks);

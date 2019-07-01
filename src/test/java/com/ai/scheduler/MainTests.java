@@ -95,4 +95,60 @@ public class MainTests {
         Assert.assertTrue(exceptionHandler.getGenericExceptions().get(0) instanceof InitializationException);
     }
 
+    @Test
+    public void given_empty_talk_will_return_null() {
+        String moreTalksFile = "empty_talks.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
+        List<DayEvent> dayEvents = classUnderTest.run(new String[]{absolutePath});
+        Assert.assertNull(dayEvents);
+    }
+
+    @Test
+    public void given_one_fixed_talk_will_return_day_event_list_with_one_fixed_talk_scheduled() {
+        String oneFixedTalk = "one_fixed_talk.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(oneFixedTalk).getFile();
+        List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
+        int totalEventBooked = result.stream()
+                .map(DayEvent::getEvents)
+                .reduce((a, b) -> {
+                    a.addAll(b);
+                    return a;
+                })
+                .get()
+                .size() - 2 * result.size(); // minutes lUNCH and TEA
+        Assert.assertEquals(totalEventBooked, 1);
+    }
+
+    @Test
+    public void given_one_flexible_talk_will_return_day_event_list_with_one_flexible_talk_scheduled() {
+        String oneFlexibleTalk = "one_flexible_talk.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(oneFlexibleTalk).getFile();
+        List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
+        int totalEventBooked = result.stream()
+                .map(DayEvent::getEvents)
+                .reduce((a, b) -> {
+                    a.addAll(b);
+                    return a;
+                })
+                .get()
+                .size() - 2 * result.size(); // minutes lUNCH and TEA
+        Assert.assertEquals(totalEventBooked, 1);
+    }
+
+    @Test
+    public void given_one_fixed_and_one_flexible_talk_will_return_day_event_list_with_one_fixed_and_one_flexible_talk_scheduled() {
+        String oneFixedAndOneFlexibleTalk = "one_fixed_and_one_flexible_talks.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(oneFixedAndOneFlexibleTalk).getFile();
+        List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
+        int totalEventBooked = result.stream()
+                .map(DayEvent::getEvents)
+                .reduce((a, b) -> {
+                    a.addAll(b);
+                    return a;
+                })
+                .get()
+                .size() - 2 * result.size(); // minutes lUNCH and TEA
+        Assert.assertEquals(totalEventBooked, 2);
+    }
+
 }

@@ -1,0 +1,13 @@
+{
+  "talks": [
+    {
+      "type": "REGULAR_TALK",
+      "description": "New age UX in the Cloudy age",
+      "tags": [
+        "cloud",
+        "beginner"
+      ],
+      "title": "What is conversational Web"
+    }
+  ]
+}
