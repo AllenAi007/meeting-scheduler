@@ -5,6 +5,7 @@
 - Maven 3.0 +
 
 ## How to Run
+- Go to project home folder, cd meeting-scheduler
 - Run without parameter, will use default talks.json from classpath:  
 `mvn exec:java`
 - Run with parameter to parse external talk files /absolutePath/talks.json:  
