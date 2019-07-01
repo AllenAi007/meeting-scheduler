@@ -7,10 +7,10 @@
 ## How to Run
 - Go to project home folder, cd meeting-scheduler
 - Run without parameter, will use default talks.json from classpath:  
-`mvn exec:java`
+`mvn clean compile exec:java`
 - Run with parameter to parse external talk files /absolutePath/talks.json:  
-`mvn exec:java -Dexec.args="/Users/aihua/Downloads/talks.json"`
+`mvn clean compile exec:java -Dexec.args="/Users/aihua/Downloads/talks.json"`
 
-## Run test, test coverage report coverage 89%
+## Run test, test coverage report coverage 88%
 - Run mvn clean test as below and then open target/site/jacoco/index.html in browser  
 `mvn clean test`
