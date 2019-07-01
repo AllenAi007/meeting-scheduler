@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
         new Main(new DefaultMeetingScheduler(DayEventFactory.createDayEvents()),
-                new DefaultExceptionHandler())
+                DefaultExceptionHandler.getInstance())
                 .run(args);
     }
 
@@ -45,8 +45,8 @@ public class Main {
             return doRun(args);
         } catch (Throwable e) {
             this.exceptionHandler.handle(e);
-            throw e;
         }
+        return null;
     }
 
     protected List<DayEvent> doRun(String[] args) {

@@ -1,7 +1,6 @@
 package com.ai.scheduler;
 
 import com.ai.scheduler.exception.InitializationException;
-import com.ai.scheduler.exception.UnknownTalkTypeException;
 import com.ai.scheduler.factory.DayEventFactory;
 import com.ai.scheduler.factory.TalksFactory;
 import com.ai.scheduler.model.DayEvent;
@@ -17,11 +16,15 @@ public class MainTests {
 
     private Main classUnderTest;
 
+    private DefaultExceptionHandler exceptionHandler;
+
     @Before
     public void before() {
+        exceptionHandler = DefaultExceptionHandler.getInstance();
         classUnderTest = new Main(
                 new DefaultMeetingScheduler(DayEventFactory.createDayEvents()),
-                new DefaultExceptionHandler());
+                exceptionHandler);
+        exceptionHandler.clear();
     }
 
     @Test
@@ -56,18 +59,23 @@ public class MainTests {
         Assert.assertEquals(totalEventBooked, totalTalks);
     }
 
-    @Test(expected = InitializationException.class)
-    public void given_invalid_json_will_throw_exception() {
+    @Test
+    public void given_invalid_json_will_throw_exception_and_can_be_handled() {
         String moreTalksFile = "talks_result.txt";
         String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
         classUnderTest.run(new String[]{absolutePath});
+        Assert.assertEquals(1, exceptionHandler.getGenericExceptions().size());
+        Assert.assertTrue(exceptionHandler.getGenericExceptions().get(0) instanceof InitializationException);
+
     }
 
-    @Test(expected = InitializationException.class)
-    public void given_json_with_unknown_talk_type_will_throw_exception() {
+    @Test
+    public void given_json_with_unknown_talk_type_will_throw_exception_and_can_be_handled() {
         String moreTalksFile = "unknown_type_talks.json";
         String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
         classUnderTest.run(new String[]{absolutePath});
+        Assert.assertEquals(1, exceptionHandler.getGenericExceptions().size());
+        Assert.assertTrue(exceptionHandler.getGenericExceptions().get(0) instanceof InitializationException);
     }
 
 }
