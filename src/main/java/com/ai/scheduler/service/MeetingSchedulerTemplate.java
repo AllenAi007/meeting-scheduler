@@ -48,7 +48,7 @@ public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
     }
 
     /**
-     * Schedule flexible talk talks for given dayEvents
+     * Schedule flexible time talks for given dayEvents
      *
      * @param dayEvents
      * @param flexibleTalks
@@ -56,7 +56,7 @@ public abstract class MeetingSchedulerTemplate implements MeetingScheduler {
     protected abstract void scheduleFlexibleTalks(List<DayEvent> dayEvents, LinkedList<Talk> flexibleTalks);
 
     /**
-     * Schedule fixed talk talks for given dayEvents
+     * Schedule fixed time talks for given dayEvents
      *
      * @param dayEvents
      * @param fixedTimeTalks
