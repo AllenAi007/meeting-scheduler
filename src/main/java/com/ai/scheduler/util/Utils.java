@@ -2,6 +2,7 @@ package com.ai.scheduler.util;
 
 import com.ai.scheduler.exception.CloneFailedException;
 import com.ai.scheduler.exception.UnknownTalkTypeException;
+import com.ai.scheduler.factory.DayEventFactory;
 import com.ai.scheduler.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -44,6 +45,10 @@ public final class Utils {
             // first event
             if (previous == null) {
                 previous = current;
+                if (!DayEventFactory.DAYEVENT_START.equals(current.getStartTime())) {
+                    result.add(new DayEvent.AvailableSlot(dayEvent,
+                            DayEventFactory.DAYEVENT_START, current.getStartTime()));
+                }
                 continue;
             }
             if (previous.getEndTime().isBefore(current.getStartTime())) {
@@ -51,6 +56,10 @@ public final class Utils {
                         previous.getEndTime(), current.getStartTime()));
             }
             previous = current;
+        }
+        if (!previous.getEndTime().equals(DayEventFactory.DAYEVENT_END)) {
+            result.add(new DayEvent.AvailableSlot(dayEvent,
+                    previous.getEndTime(), DayEventFactory.DAYEVENT_END));
         }
         return result;
     }
