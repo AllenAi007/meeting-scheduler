@@ -151,4 +151,20 @@ public class MainTests {
         Assert.assertEquals(totalEventBooked, 2);
     }
 
+    @Test
+    public void given_talks_without_keynote_and_closing_return_day_events_with_flexible_talks_scheduled() {
+        String moreTalksFile = "talks_without_keynote_and_closing.json";
+        String absolutePath = Thread.currentThread().getContextClassLoader().getResource(moreTalksFile).getFile();
+        List<DayEvent> result = classUnderTest.run(new String[]{absolutePath});
+        int totalEventBooked = result.stream()
+                .map(DayEvent::getEvents)
+                .reduce((a, b) -> {
+                    a.addAll(b);
+                    return a;
+                })
+                .get()
+                .size() - 2 * result.size(); // minutes lUNCH and TEA
+        int totalTalks = TalksFactory.createTalks(absolutePath).getTalks().size();
+        Assert.assertEquals(totalEventBooked, totalTalks);
+    }
 }

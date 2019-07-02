@@ -12,8 +12,8 @@ import java.util.List;
  */
 public final class DayEventFactory {
 
-    private static final LocalTime DAYEVENT_START = LocalTime.of(9, 0);
-    private static final LocalTime DAYEVENT_END = LocalTime.of(19, 30);
+    public static final LocalTime DAYEVENT_START = LocalTime.of(9, 0);
+    public static final LocalTime DAYEVENT_END = LocalTime.of(19, 30);
 
     private DayEventFactory() {
     }
