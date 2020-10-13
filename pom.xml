@@ -12,7 +12,7 @@
         <jackson.version>2.9.9</jackson.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.8</lombok.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <!-- Project settings -->
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
